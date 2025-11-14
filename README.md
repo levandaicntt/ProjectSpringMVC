@@ -1,2 +1,183 @@
 # ProjectSpringMVC
 spring mvc don't need internet
+
+1. Cấu trúc dự án (trong VS Code / folder gốc)
+ProjectSpringMVC/
+├─ src/
+│  └─ com/
+│     └─ demo/
+│        └─ controller/
+│           └─ HomeController.java
+│
+├─ WebContent/
+│  ├─ view/
+│  │  └─ home.jsp
+│  │
+│  └─ WEB-INF/
+│     ├─ web.xml
+│     ├─ dispatcher-servlet.xml
+│     ├─ classes/
+│     │  └─ com/demo/controller/HomeController.class
+│     │
+│     └─ lib/
+│        ├─ classmate-1.5.1.jar                  (phụ thuộc của Hibernate Validator)
+│        ├─ commons-logging-1.2.jar              (logging cho Spring)
+│        ├─ hibernate-validator-7.0.5.Final.jar  (Bean Validation impl, dùng cho @Valid)
+│        ├─ jackson-annotations-2.20.jar         (Jackson – JSON)
+│        ├─ jackson-core-3.0.2.jar
+│        ├─ jackson-databind-3.0.2.jar
+│        ├─ jakarta.el-4.0.2.jar                 (Expression Language)
+│        ├─ jakarta.el-api-4.0.0.jar
+│        ├─ jakarta.servlet-api-6.1.0.jar        (Servlet API cho Tomcat 10)
+│        ├─ jakarta.servlet.jsp.jstl-3.0.1.jar   (JSTL impl)
+│        ├─ jakarta.servlet.jsp.jstl-api-3.0.2.jar
+│        ├─ jakarta.validation-api-3.0.2.jar      (Bean Validation API – @NotBlank, @Email,...)
+│        ├─ jboss-logging-3.4.3.Final.jar        (logging cho Hibernate Validator)
+│        ├─ micrometer-commons-1.14.13.jar       (Micrometer – dependency của Spring 6)
+│        ├─ micrometer-observation-1.14.13.jar
+│        ├─ mysql-connector-j-9.5.0.jar          (JDBC MySQL)
+│        ├─ spring-aop-6.2.13.jar
+│        ├─ spring-beans-6.2.13.jar
+│        ├─ spring-context-6.2.13.jar
+│        ├─ spring-core-6.2.13.jar
+│        ├─ spring-expression-6.2.13.jar
+│        ├─ spring-jdbc-6.2.13.jar
+│        ├─ spring-web-6.2.13.jar
+│        └─ spring-webmvc-6.2.13.jar
+│
+├─ .vscode/
+│  └─ settings.json
+│
+└─ run.bat
+
+2. Khi deploy sang Tomcat
+apache-tomcat-10.1.46/
+└─ webapps/
+   └─ ProjectSpringMVC/
+      ├─ view/
+      │  └─ home.jsp
+      └─ WEB-INF/
+         ├─ web.xml
+         ├─ dispatcher-servlet.xml
+         ├─ classes/
+         │  └─ com/demo/controller/HomeController.class
+         └─ lib/
+            └─ (toàn bộ .jar giống trong project)
+
+
+1️⃣ .vscode/settings.json – để VS Code hiểu project & tự compile
+Giải thích từng dòng
+
+"java.project.sourcePaths": ["src"]
+👉 Nói với VS Code: “code Java của tao nằm trong thư mục src đó”
+→ Nhờ vậy file src/com/demo/controller/HomeController.java mới được coi là source, không bị lỗi package.
+
+"java.project.outputPath": "WebContent/WEB-INF/classes"
+👉 Nơi VS Code sẽ đặt các file .class sau khi compile.
+→ Khớp với cấu trúc WAR chuẩn: WEB-INF/classes/... để Tomcat load.
+
+"java.project.referencedLibraries": ["WebContent/WEB-INF/lib/**/*.jar"]
+👉 Cho VS Code biết: “tất cả .jar trong WEB-INF/lib là thư viện (Spring, Jakarta, MySQL, Micrometer, Jackson, ...)”
+→ Import org.springframework... không còn đỏ.
+
+"java.autobuild.enabled": true
+👉 Bật auto build: mỗi lần bạn Ctrl+S file .java, VS Code tự compile lại .class.
+
+"java.configuration.updateBuildConfiguration": "automatic"
+👉 Cho Java extension tự đọc lại cấu hình (sourcePaths, libs) khi bạn sửa settings, tránh phải chỉnh tay.
+
+Sau khi sửa settings.json, nhớ:
+Ctrl+Shift+P → Java: Clean Java Language Server Workspace → VS Code reload 1 lần.
+
+2️⃣ run.bat – file “1 cú click: compile + copy + start Tomcat”
+Giải thích các phần trong run.bat
+
+set PROJECT_DIR=...
+👉 Nơi chứa project Spring MVC (src, WebContent).
+
+set TOMCAT_DIR=...
+👉 Thư mục gốc Tomcat (nơi có bin, webapps, conf...).
+
+set WEBAPP_NAME=ProjectSpringMVC
+👉 Tên thư mục webapp trong webapps.
+→ URL sẽ là http://localhost:8080/ProjectSpringMVC/.
+
+Khối javac ...
+👉 Compile Java:
+
+-cp "WebContent\WEB-INF\lib\*;.": dùng toàn bộ jar làm classpath.
+
+-d WebContent\WEB-INF\classes: xuất .class vào đúng chỗ Tomcat cần.
+
+src\com\demo\controller\HomeController.java: file cần compile (sau này muốn compile hết thì dùng src\com\demo\**\*.java nếu cần).
+
+Khối xcopy WebContent ...
+👉 Xoá webapp cũ → copy nguyên WebContent (có WEB-INF/lib, WEB-INF/classes, JSP, …) vào webapps/ProjectSpringMVC.
+
+Khối shutdown.bat + startup.bat
+👉 Dừng Tomcat cũ (nếu đang chạy) rồi start lại, để load jar và class mới.
+
+3️⃣ Tự cài PATH / JAVA_HOME / JRE_HOME vĩnh viễn trên máy
+Để khỏi gõ $Env:JAVA_HOME = ... nữa, làm 1 lần:
+
+Bước 1 – Mở cửa sổ Environment Variables
+
+- Bấm Start → gõ: Environment Variables
+
+- Chọn: “Edit the system environment variables”
+
+- Trong cửa sổ mới → bấm nút Environment Variables…
+
+Bước 2 – Tạo JAVA_HOME
+
+- Ở User variables (cho user hiện tại) hoặc System variables (cho toàn máy): → Bấm New…
+
+- Variable name: JAVA_HOME
+
+- Variable value: C:\Program Files\Java\jdk-xx (xx là phiên bản của jdk, của tôi là jdk-22)
+
+- Bấm OK
+
+Bước 3 – Tạo JRE_HOME (Tomcat rất thích cái này)
+
+- Bấm New… → tiếp
+
+- Variable name: JRE_HOME
+
+- Variable value: C:\Program Files\Java\jdk-xx
+
+- Bấm OK
+
+* Nhớ: KHÔNG thêm \bin vào JAVA_HOME / JRE_HOME.
+
+Bước 4 – Thêm JDK vào PATH (nếu chưa có)
+
+- Trong cùng cửa sổ:
+
+- Ở User variables, chọn biến Path → Edit… → Bấm New
+
+- Thêm dòng: %JAVA_HOME%\bin
+
+- OK hết để lưu.
+
+Bước 5 – Kiểm tra
+
+- Mở CMD mới (bắt buộc phải mở cửa sổ mới):
+
+echo %JAVA_HOME%
+echo %JRE_HOME%
+java -version
+javac -version
+
+
+- Nếu in ra: C:\Program Files\Java\jdk-22
+
+thông tin Java/Javac đúng version
+
+→ Xong. Sau này bạn chỉ cần:
+
+cd D:\apache-tomcat-10.1.46-windows-x64\apache-tomcat-10.1.46\bin
+.\startup.bat
+
+
+không cần set $Env:JAVA_HOME nữa.
