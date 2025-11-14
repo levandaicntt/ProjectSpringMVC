@@ -5,4 +5,4 @@
 
 # Build output
 /WebContent/WEB-INF/classes/
-/*.class
+*.class
