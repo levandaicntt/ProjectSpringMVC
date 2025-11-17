@@ -187,69 +187,6 @@ http://localhost:8080/ProjectSpringMVC/
 
 Nếu thấy trang web lên (trang home) → chạy thành công.
 
-1. Cấu trúc dự án (trong VS Code / folder gốc)
-ProjectSpringMVC/
-├─ src/
-│  └─ com/
-│     └─ demo/
-│        └─ controller/
-│           └─ HomeController.java
-│
-├─ WebContent/
-│  ├─ view/
-│  │  └─ home.jsp
-│  │
-│  └─ WEB-INF/
-│     ├─ web.xml
-│     ├─ dispatcher-servlet.xml
-│     ├─ classes/
-│     │  └─ com/demo/controller/HomeController.class
-│     │
-│     └─ lib/
-│        ├─ classmate-1.5.1.jar                  (phụ thuộc của Hibernate Validator)
-│        ├─ commons-logging-1.2.jar              (logging cho Spring)
-│        ├─ hibernate-validator-7.0.5.Final.jar  (Bean Validation impl, dùng cho @Valid)
-│        ├─ jackson-annotations-2.20.jar         (Jackson – JSON)
-│        ├─ jackson-core-3.0.2.jar
-│        ├─ jackson-databind-3.0.2.jar
-│        ├─ jakarta.el-4.0.2.jar                 (Expression Language)
-│        ├─ jakarta.el-api-4.0.0.jar
-│        ├─ jakarta.servlet-api-6.1.0.jar        (Servlet API cho Tomcat 10)
-│        ├─ jakarta.servlet.jsp.jstl-3.0.1.jar   (JSTL impl)
-│        ├─ jakarta.servlet.jsp.jstl-api-3.0.2.jar
-│        ├─ jakarta.validation-api-3.0.2.jar      (Bean Validation API – @NotBlank, @Email,...)
-│        ├─ jboss-logging-3.4.3.Final.jar        (logging cho Hibernate Validator)
-│        ├─ micrometer-commons-1.14.13.jar       (Micrometer – dependency của Spring 6)
-│        ├─ micrometer-observation-1.14.13.jar
-│        ├─ mysql-connector-j-9.5.0.jar          (JDBC MySQL)
-│        ├─ spring-aop-6.2.13.jar
-│        ├─ spring-beans-6.2.13.jar
-│        ├─ spring-context-6.2.13.jar
-│        ├─ spring-core-6.2.13.jar
-│        ├─ spring-expression-6.2.13.jar
-│        ├─ spring-jdbc-6.2.13.jar
-│        ├─ spring-web-6.2.13.jar
-│        └─ spring-webmvc-6.2.13.jar
-│
-├─ .vscode/
-│  └─ settings.json
-│
-└─ run.bat
-
-2. Khi deploy sang Tomcat
-apache-tomcat-10.1.46/
-└─ webapps/
-   └─ ProjectSpringMVC/
-      ├─ view/
-      │  └─ home.jsp
-      └─ WEB-INF/
-         ├─ web.xml
-         ├─ dispatcher-servlet.xml
-         ├─ classes/
-         │  └─ com/demo/controller/HomeController.class
-         └─ lib/
-            └─ (toàn bộ .jar giống trong project)
-
 
 1️⃣ .vscode/settings.json – để VS Code hiểu project & tự compile
 Giải thích từng dòng
