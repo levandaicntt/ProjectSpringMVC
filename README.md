@@ -1,6 +1,10 @@
 # ProjectSpringMVC
 spring mvc don't need internet
 
+Yêu cầu
+JAVA JDK 17+
+Tomcat 10+
+
 ✅ HƯỚNG DẪN CHẠY DỰ ÁN SPRING MVC (KHÔNG MAVEN) – DÀNH CHO NGƯỜI MỚI
 1. Cài JDK
 Bước 1: Tải JDK
