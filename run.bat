@@ -1,15 +1,15 @@
 @echo off
-title Run Spring MVC - Tomcat 10 (old folder)
+title Run Spring MVC - Tomcat 9
 
 rem =============================
 rem  CẤU HÌNH ĐƯỜNG DẪN
 rem =============================
 
-rem Thư mục project Spring MVC (thư mục cũ bạn đang dùng)
+rem Thư mục project Spring MVC
 set PROJECT_DIR=D:\ProjectSpringMVC
 
-rem Thư mục Tomcat 10 (đúng như bạn đã gửi trước đó)
-set TOMCAT_DIR=D:\apache-tomcat-10.1.46-windows-x64\apache-tomcat-10.1.46
+rem Thư mục GỐC Tomcat 9
+set TOMCAT_DIR=D:\apache-tomcat-9.0.112
 
 rem Tên app khi deploy vào webapps
 set WEBAPP_NAME=ProjectSpringMVC
@@ -48,21 +48,25 @@ rem =============================
 
 echo [2/3] Copy WebContent to Tomcat...
 
-rem Xoá app cũ (nếu có)
 rmdir /S /Q "%TOMCAT_DIR%\webapps\%WEBAPP_NAME%" 2>nul
-
 xcopy "WebContent" "%TOMCAT_DIR%\webapps\%WEBAPP_NAME%" /E /I /Y >nul
 
 echo Copy OK.
 echo.
 
 rem =============================
-rem  RESTART TOMCAT 10
+rem  RESTART TOMCAT
 rem =============================
 
-echo [3/3] Restart Tomcat 10...
+echo [3/3] Restart Tomcat...
 
-cd /d "%TOMCAT_DIR%\bin"
+echo Go to: "%TOMCAT_DIR%\bin"
+cd /d "%TOMCAT_DIR%\bin" || (
+    echo !!!
+    echo Khong vao duoc thu muc bin cua Tomcat. Kiem tra lai TOMCAT_DIR trong run.bat
+    pause
+    exit /b 1
+)
 
 call shutdown.bat >nul 2>&1
 ping 127.0.0.1 -n 3 >nul

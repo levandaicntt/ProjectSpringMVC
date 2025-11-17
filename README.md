@@ -5,191 +5,199 @@ Yêu cầu
 JAVA JDK 17+
 Tomcat 10+
 
-✅ HƯỚNG DẪN CHẠY DỰ ÁN SPRING MVC (KHÔNG MAVEN) – DÀNH CHO NGƯỜI MỚI
-1. Cài JDK
+✅ HƯỚNG DẪN CHẠY DỰ ÁN SPRING MVC (KHÔNG MAVEN) – BẢN HIỆN TẠI
+👉 JDK 17, Tomcat 9
+
+1. Cài JDK 17
 Bước 1: Tải JDK
+Vào 1 trong 2 trang (chọn bản 17):
 
-Vào trang:
 
-https://jdk.java.net
+Oracle: https://www.oracle.com/java/technologies/downloads/
 
-Chọn file:
 
-jdk-xx_windows-x64_bin.zip
+Adoptium: https://adoptium.net/
 
-(tuỳ phiên bản, 17 hoặc 22 đều được)
 
-Giải nén vào một thư mục dễ nhớ, ví dụ:
-
-C:\Java\jdk-22
+Tải installer (đuôi .msi / .exe) hoặc file zip.
+Ví dụ cài xong sẽ nằm ở:
+C:\Program Files\Java\jdk-17.0.0.1
 
 Bước 2: Thiết lập biến môi trường
-
-Mở Edit the system environment variables → nút Environment Variables…
-
-Trong phần System variables hoặc User variables, tạo:
-
-JAVA_HOME = C:\Java\jdk-22
-JRE_HOME  = C:\Java\jdk-22
-PATH     += %JAVA_HOME%\bin
+Mở Edit the system environment variables → Environment Variables…
+Ở System variables (khung dưới):
 
 
-(Trong Path: Edit → New → nhập %JAVA_HOME%\bin)
+JAVA_HOME
 
+
+New…
+
+
+Name: JAVA_HOME
+
+
+Value: C:\Program Files\Java\jdk-17.0.0.1
+
+
+
+
+JRE_HOME (tuỳ chọn nhưng nên có)
+
+
+Name: JRE_HOME
+
+
+Value: C:\Program Files\Java\jdk-17.0.0.1
+
+
+
+
+PATH
+
+
+Chọn Path → Edit…
+
+
+New 1 dòng:
+%JAVA_HOME%\bin
+
+
+
+Move Up cho dòng này lên tương đối cao.
+
+
+
+
+Bấm OK hết tất cả cửa sổ.
 Bước 3: Kiểm tra
-
-Mở CMD mới:
-
+Mở CMD mới (không dùng cửa sổ cũ):
 java -version
 javac -version
 
+Nếu hiện Java 17 (không báo lỗi) → OK.
 
-Nếu hiện version (không báo lỗi) → OK.
-
-2. Cài Tomcat 10
+2. Cài Tomcat 9
 Bước 1: Tải Tomcat
-
 Vào:
+https://tomcat.apache.org/download-90.cgi
+Ở mục Core → Binary Distributions chọn:
+32-bit/64-bit Windows zip
 
-https://tomcat.apache.org/download-10.cgi
-
-Ở phần Core → Binary Distributions, tải:
-
-apache-tomcat-10.x.x-windows-x64.zip
-
+(hoặc 64-bit Windows zip nếu có).
 Bước 2: Giải nén
-
-Giải nén vào một thư mục, ví dụ:
-
-D:\Tomcat\apache-tomcat-10.1.46
-
+Giải nén, ví dụ:
+D:\apache-tomcat-9.0.112
 
 Gọi thư mục này là:
-
-<TOMCAT_HOME>
+<TOMCAT9_HOME>
 
 Bước 3: Test Tomcat
-
-Mở PowerShell/CMD:
-
-cd <TOMCAT_HOME>\bin
-.\startup.bat
-
+Mở CMD:
+cd <TOMCAT9_HOME>\bin
+startup.bat
 
 Mở trình duyệt:
-
 http://localhost:8080
 
+Thấy trang chào mừng Tomcat 9 → OK.
+Tắt Tomcat:
+cd <TOMCAT9_HOME>\bin
+shutdown.bat
 
-Nếu thấy trang chào mừng Tomcat → cài xong.
-
-Muốn tắt Tomcat:
-
-cd <TOMCAT_HOME>\bin
-.\shutdown.bat
 
 3. Cài Git
-
-Tải tại:
-
-https://git-scm.com/download/win
-
+Tải tại: https://git-scm.com/download/win
 Cài đặt mặc định (Next → Next → Finish).
 
 4. Clone project từ GitHub (nhánh TheFirst)
-
-Mở CMD / PowerShell ở thư mục bạn muốn chứa code, chạy:
-
+Mở CMD / PowerShell ở thư mục muốn chứa code, chạy:
 git clone https://github.com/levandaicntt/ProjectSpringMVC.git
 cd ProjectSpringMVC
 git checkout TheFirst
 
+Thư mục này gọi là:
+<PROJECT_ROOT>
 
-Thư mục ProjectSpringMVC chính là <PROJECT_ROOT>.
 
-5. Mở dự án bằng VS Code (khuyến khích)
-Bước 1: Cài VS Code
+5. Mở dự án bằng VS Code
 
-https://code.visualstudio.com/
 
-Bước 2: Cài Extension Pack for Java
+Cài VS Code: https://code.visualstudio.com/
 
-Trong VS Code → Extensions → tìm và cài:
+
+Trong VS Code → Extensions → cài:
+
 
 Extension Pack for Java
 
-Bước 3: Mở project
+
+
 
 File → Open Folder…
+Chọn thư mục <PROJECT_ROOT> (ProjectSpringMVC).
 
-Chọn thư mục: ProjectSpringMVC vừa clone.
 
-Repo đã có sẵn cấu hình .vscode/settings.json, VS Code sẽ tự nhận:
+Trong repo đã có sẵn .vscode/settings.json nên:
+
 
 Source: src
 
+
 Output .class: WebContent/WEB-INF/classes
 
-Thư viện: WebContent/WEB-INF/lib/...
 
-Người dùng không cần cấu hình thêm.
-
-6. Chỉnh file run.bat (chỉ 1 lần)
-
-Trong thư mục ProjectSpringMVC, mở file:
-
-run.bat
+Lib: WebContent/WEB-INF/lib/*.jar
 
 
-Ở đầu file, sửa 3 dòng này cho đúng máy:
+→ Không cần cấu hình thêm.
 
+6. Sửa file run.bat (Tomcat 9 + JDK 17)
+Trong <PROJECT_ROOT> mở run.bat (hoặc run-tomcat9.bat nếu bạn tách file).
+Chỉnh 3 biến ở đầu file:
 set PROJECT_DIR=<đường_dẫn_tới_ProjectSpringMVC>
-set TOMCAT_DIR=<đường_dẫn_tới_Tomcat_10>
+set TOMCAT_DIR=<đường_dẫn_tới_Tomcat9>
+set WEBAPP_NAME=ProjectSpringMVC
+
+Ví dụ trên máy bạn:
+set PROJECT_DIR=D:\ProjectSpringMVC
+set TOMCAT_DIR=D:\apache-tomcat-9.0.112
 set WEBAPP_NAME=ProjectSpringMVC
 
 
-Ví dụ:
+Chỉ cần sửa cho đúng đường dẫn thư mục thật trên máy.
 
-set PROJECT_DIR=D:\Code\ProjectSpringMVC
-set TOMCAT_DIR=D:\Tomcat\apache-tomcat-10.1.46
-set WEBAPP_NAME=ProjectSpringMVC
-
-
-PROJECT_DIR: đường dẫn tới thư mục bạn đã clone (ProjectSpringMVC).
-
-TOMCAT_DIR: thư mục gốc Tomcat (chứa bin, webapps, …).
-
-WEBAPP_NAME: tên app sẽ deploy trên Tomcat (dùng luôn ProjectSpringMVC).
-
-Lưu file lại.
 
 7. Chạy dự án
-Cách chạy nhanh: double-click run.bat
 
-Đảm bảo Tomcat đang tắt (nếu đang chạy, dùng shutdown.bat).
 
-Trong Explorer, vào thư mục ProjectSpringMVC, double-click:
+Đảm bảo Tomcat đang tắt (nếu đang chạy thì shutdown.bat trước).
 
+
+Vào <PROJECT_ROOT> trong Explorer, double-click:
 run.bat
 
 
-Script sẽ tự động:
 
-Biên dịch code Java.
+Script sẽ:
 
-Copy nội dung web vào:
 
+Biên dịch toàn bộ Java trong src bằng JDK 17;
+
+
+Copy WebContent vào:
 <TOMCAT_DIR>\webapps\ProjectSpringMVC\
 
 
-Restart Tomcat.
+
+Khởi động lại Tomcat 9.
+
 
 Khi cửa sổ run.bat báo xong, mở trình duyệt:
-
 http://localhost:8080/ProjectSpringMVC/
 
+Nếu thấy trang home hiện lên → bạn đã chạy thành công dự án Spring MVC với JDK 17 + Tomcat 9.
 
-Nếu thấy trang web lên (trang home) → chạy thành công.
 
 
 1️⃣ .vscode/settings.json – để VS Code hiểu project & tự compile

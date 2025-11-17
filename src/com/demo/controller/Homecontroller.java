@@ -9,7 +9,7 @@ public class Homecontroller {
 
     @GetMapping("/")
     public String index(Model model) {
-        model.addAttribute("message", "Hello Spring MVC from VS Code + Tomcat 10!!!");
+        model.addAttribute("message", "Hello Spring MVC from VS Code + Tomcat 9!!!");
         return "home";
     }
 }
