@@ -1,22 +1,39 @@
 @echo off
-title Run Spring MVC - Tomcat 9
+setlocal
+title Run Spring MVC - Local JDK + Tomcat 9
 
 rem =============================
-rem  CẤU HÌNH ĐƯỜNG DẪN
+rem  CẤU HÌNH ĐƯỜNG DẪN TƯƠNG ĐỐI
 rem =============================
 
-rem Thư mục project Spring MVC
-set PROJECT_DIR=D:\ProjectSpringMVC
+rem Thư mục chứa run.bat = gốc project
+set "BASE_DIR=%~dp0"
+set "PROJECT_DIR=%BASE_DIR%"
 
-rem Thư mục GỐC Tomcat 9
-set TOMCAT_DIR=D:\apache-tomcat-9.0.112
+rem JDK đặt trong tools\jdk
+set "JDK_DIR=%BASE_DIR%tools\jdk"
+
+rem Tomcat 9 đặt trong tools\tomcat
+set "TOMCAT_DIR=%BASE_DIR%tools\tomcat"
 
 rem Tên app khi deploy vào webapps
-set WEBAPP_NAME=ProjectSpringMVC
+set "WEBAPP_NAME=ProjectSpringMVC"
+
+rem =============================
+rem  CHỌN JDK LOCAL
+rem =============================
+set "JAVA_HOME=%JDK_DIR%"
+set "JRE_HOME=%JDK_DIR%"
+set "PATH=%JAVA_HOME%\bin;%PATH%"
 
 echo PROJECT_DIR = %PROJECT_DIR%
+echo JDK_DIR     = %JDK_DIR%
 echo TOMCAT_DIR  = %TOMCAT_DIR%
 echo WEBAPP_NAME = %WEBAPP_NAME%
+echo.
+
+echo Java version dung de build:
+java -version
 echo.
 
 rem =============================
@@ -27,14 +44,14 @@ cd /d "%PROJECT_DIR%"
 
 echo [1/3] Compiling Java source...
 
-javac -encoding UTF-8 ^
+"%JAVA_HOME%\bin\javac" -encoding UTF-8 ^
   -cp "WebContent\WEB-INF\lib\*;." ^
-  -d WebContent\WEB-INF\classes ^
+  -d "WebContent\WEB-INF\classes" ^
   src\com\demo\controller\*.java
 
 if errorlevel 1 (
   echo.
-  echo !!! Compile FAILED. Kiểm tra lại lỗi ở trên.
+  echo !!! Compile FAILED. Kiem tra lai loi o tren.
   pause
   exit /b 1
 )
@@ -78,3 +95,4 @@ echo Open: http://localhost:8080/%WEBAPP_NAME%/
 echo.
 
 pause
+endlocal
