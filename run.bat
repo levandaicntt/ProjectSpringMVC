@@ -1,22 +1,15 @@
 @echo off
-setlocal
+setlocal EnableDelayedExpansion
 title Run Spring MVC - Local JDK + Tomcat 10
 
 rem =============================
 rem  CẤU HÌNH ĐƯỜNG DẪN TƯƠNG ĐỐI
 rem =============================
 
-rem Thư mục chứa run.bat = gốc project
 set "BASE_DIR=%~dp0"
 set "PROJECT_DIR=%BASE_DIR%"
-
-rem JDK đặt trong tools\jdk
 set "JDK_DIR=%BASE_DIR%tools\jdk"
-
-rem Tomcat 9 đặt trong tools\tomcat
 set "TOMCAT_DIR=%BASE_DIR%tools\tomcat"
-
-rem Tên app khi deploy vào webapps
 set "WEBAPP_NAME=ProjectSpringMVC"
 
 rem =============================
@@ -39,15 +32,35 @@ echo.
 rem =============================
 rem  COMPILE SOURCE
 rem =============================
-
 cd /d "%PROJECT_DIR%"
 
 echo [1/3] Compiling Java source...
 
-"%JAVA_HOME%\bin\javac" -encoding UTF-8 ^
-  -cp "WebContent\WEB-INF\lib\*;." ^
+rem Tao folder output neu chua co
+if not exist "WebContent\WEB-INF\classes" mkdir "WebContent\WEB-INF\classes"
+
+rem Tao classpath tu tat ca jar trong WEB-INF/lib
+set "CP=WebContent\WEB-INF\lib\*;WebContent\WEB-INF\classes;."
+
+rem Tao danh sach tat ca file .java (vi javac tren Windows khong an *.java)
+set "SOURCES=%PROJECT_DIR%sources.txt"
+del "%SOURCES%" 2>nul
+
+for /r "%PROJECT_DIR%src\com\test\demo" %%F in (*.java) do (
+  echo %%~fF>>"%SOURCES%"
+)
+
+rem Neu khong tim thay file java thi bao loi
+for %%A in ("%SOURCES%") do if %%~zA==0 (
+  echo !!! Khong tim thay file .java trong src\com\test\demo
+  pause
+  exit /b 1
+)
+
+"%JAVA_HOME%\bin\javac.exe" -encoding UTF-8 ^
+  -cp "%CP%" ^
   -d "WebContent\WEB-INF\classes" ^
-  src\com\demo\controller\*.java
+  @"%SOURCES%"
 
 if errorlevel 1 (
   echo.
@@ -62,7 +75,6 @@ echo.
 rem =============================
 rem  COPY WEBCONTENT -> TOMCAT
 rem =============================
-
 echo [2/3] Copy WebContent to Tomcat...
 
 rmdir /S /Q "%TOMCAT_DIR%\webapps\%WEBAPP_NAME%" 2>nul
@@ -74,15 +86,13 @@ echo.
 rem =============================
 rem  RESTART TOMCAT
 rem =============================
-
 echo [3/3] Restart Tomcat...
 
-echo Go to: "%TOMCAT_DIR%\bin"
 cd /d "%TOMCAT_DIR%\bin" || (
-    echo !!!
-    echo Khong vao duoc thu muc bin cua Tomcat. Kiem tra lai TOMCAT_DIR trong run.bat
-    pause
-    exit /b 1
+  echo !!!
+  echo Khong vao duoc thu muc bin cua Tomcat. Kiem tra lai TOMCAT_DIR trong run.bat
+  pause
+  exit /b 1
 )
 
 call shutdown.bat >nul 2>&1
@@ -93,6 +103,5 @@ echo.
 echo DONE!
 echo Open: http://localhost:8080/%WEBAPP_NAME%/
 echo.
-
 pause
 endlocal

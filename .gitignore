@@ -2,7 +2,7 @@
 *.css.map
 *.sass.map
 *.scss.map
-
+sources.txt
 # Build output
 /WebContent/WEB-INF/classes/
 *.class
