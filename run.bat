@@ -1,22 +1,39 @@
 @echo off
-title Run Spring MVC - Tomcat 10 (old folder)
+setlocal
+title Run Spring MVC - Local JDK + Tomcat 10
 
 rem =============================
-rem  CẤU HÌNH ĐƯỜNG DẪN
+rem  CẤU HÌNH ĐƯỜNG DẪN TƯƠNG ĐỐI
 rem =============================
 
-rem Thư mục project Spring MVC (thư mục cũ bạn đang dùng)
-set PROJECT_DIR=D:\ProjectSpringMVC
+rem Thư mục chứa run.bat = gốc project
+set "BASE_DIR=%~dp0"
+set "PROJECT_DIR=%BASE_DIR%"
 
-rem Thư mục Tomcat 10 (đúng như bạn đã gửi trước đó)
-set TOMCAT_DIR=D:\apache-tomcat-10.1.46-windows-x64\apache-tomcat-10.1.46
+rem JDK đặt trong tools\jdk
+set "JDK_DIR=%BASE_DIR%tools\jdk"
+
+rem Tomcat 9 đặt trong tools\tomcat
+set "TOMCAT_DIR=%BASE_DIR%tools\tomcat"
 
 rem Tên app khi deploy vào webapps
-set WEBAPP_NAME=ProjectSpringMVC
+set "WEBAPP_NAME=ProjectSpringMVC"
+
+rem =============================
+rem  CHỌN JDK LOCAL
+rem =============================
+set "JAVA_HOME=%JDK_DIR%"
+set "JRE_HOME=%JDK_DIR%"
+set "PATH=%JAVA_HOME%\bin;%PATH%"
 
 echo PROJECT_DIR = %PROJECT_DIR%
+echo JDK_DIR     = %JDK_DIR%
 echo TOMCAT_DIR  = %TOMCAT_DIR%
 echo WEBAPP_NAME = %WEBAPP_NAME%
+echo.
+
+echo Java version dung de build:
+java -version
 echo.
 
 rem =============================
@@ -27,14 +44,14 @@ cd /d "%PROJECT_DIR%"
 
 echo [1/3] Compiling Java source...
 
-javac -encoding UTF-8 ^
+"%JAVA_HOME%\bin\javac" -encoding UTF-8 ^
   -cp "WebContent\WEB-INF\lib\*;." ^
-  -d WebContent\WEB-INF\classes ^
+  -d "WebContent\WEB-INF\classes" ^
   src\com\demo\controller\*.java
 
 if errorlevel 1 (
   echo.
-  echo !!! Compile FAILED. Kiểm tra lại lỗi ở trên.
+  echo !!! Compile FAILED. Kiem tra lai loi o tren.
   pause
   exit /b 1
 )
@@ -48,21 +65,25 @@ rem =============================
 
 echo [2/3] Copy WebContent to Tomcat...
 
-rem Xoá app cũ (nếu có)
 rmdir /S /Q "%TOMCAT_DIR%\webapps\%WEBAPP_NAME%" 2>nul
-
 xcopy "WebContent" "%TOMCAT_DIR%\webapps\%WEBAPP_NAME%" /E /I /Y >nul
 
 echo Copy OK.
 echo.
 
 rem =============================
-rem  RESTART TOMCAT 10
+rem  RESTART TOMCAT
 rem =============================
 
-echo [3/3] Restart Tomcat 10...
+echo [3/3] Restart Tomcat...
 
-cd /d "%TOMCAT_DIR%\bin"
+echo Go to: "%TOMCAT_DIR%\bin"
+cd /d "%TOMCAT_DIR%\bin" || (
+    echo !!!
+    echo Khong vao duoc thu muc bin cua Tomcat. Kiem tra lai TOMCAT_DIR trong run.bat
+    pause
+    exit /b 1
+)
 
 call shutdown.bat >nul 2>&1
 ping 127.0.0.1 -n 3 >nul
@@ -74,3 +95,4 @@ echo Open: http://localhost:8080/%WEBAPP_NAME%/
 echo.
 
 pause
+endlocal
